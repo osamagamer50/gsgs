@@ -1,0 +1,731 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>DevilCraft</title>
+
+<style>
+
+.logout-btn {
+  padding: 8px 18px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 14px;
+
+  background: linear-gradient(90deg, #b91c1c, #ff2d2d);
+  color: #120202;
+
+  box-shadow: 0 0 12px rgba(255, 45, 45, 0.45);
+  transition: 
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    filter 0.25s ease;
+}
+
+.logout-btn:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 
+    0 0 18px rgba(255, 45, 45, 0.8),
+    0 0 30px rgba(255, 45, 45, 0.4);
+  filter: brightness(1.2);
+}
+
+.logout-btn:active {
+  transform: scale(0.96);
+  box-shadow: 0 0 10px rgba(255, 45, 45, 0.6) inset;
+}
+
+.register-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+}
+
+.register-card {
+  width: 420px;
+  background: rgba(0,0,0,0.55);
+  border-radius: 14px;
+  padding: 30px;
+  border: 1px solid rgba(255,255,255,0.05);
+  box-shadow: 0 0 25px rgba(255,45,45,0.35);
+  text-align: center;
+  animation: fadeUp 0.8s ease;
+}
+
+.register-logo {
+  width: 80px;
+  margin-bottom: 10px;
+}
+
+.register-card h2 {
+  color: #ff2d2d;
+  margin-bottom: 20px;
+}
+
+.register-card input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  border: none;
+  background: #111;
+  color: #fff;
+  outline: none;
+}
+
+.pass-row {
+  display: flex;
+  gap: 10px;
+}
+
+.register-btn {
+  width: 100%;
+  padding: 13px;
+  margin-top: 10px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  background: linear-gradient(90deg, #b91c1c, #ff2d2d);
+  color: black;
+  transition: 0.3s;
+}
+
+.register-btn:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 20px rgba(255,45,45,0.7);
+}
+
+.login-text {
+  margin-top: 15px;
+  font-size: 14px;
+  color: #aaa;
+}
+
+.login-text span {
+  color: #ff2d2d;
+  cursor: pointer;
+}
+
+.discord-box iframe {
+  border-radius: 12px;
+  opacity: 0;
+  transform: scale(0.9);
+  animation: discordShow 0.8s ease forwards;
+  animation-delay: 0.3s;
+}
+
+@keyframes fadeUp {
+  from {opacity:0; transform: translateY(30px);}
+  to {opacity:1; transform: translateY(0);}
+}
+
+@keyframes discordShow {
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* بداية: نخلي iframe مخفي ومتصغر */
+.discord-center iframe {
+  opacity: 0;
+  transform: scale(0.8);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+/* class يظهر الـ iframe */
+.discord-center iframe.show {
+  opacity: 1;
+  transform: scale(1);
+}
+</style>
+
+<script>
+// لما الصفحة تجهز، نضيف class للـ iframe عشان يظهر بالأنيميشن
+window.addEventListener('DOMContentLoaded', ()=>{
+  const iframe = document.querySelector('.discord-center iframe');
+  setTimeout(()=>{   // تأخير بسيط يعطي تأثير smooth
+    iframe.classList.add('show');
+  }, 300);
+});
+</script>
+
+
+  <style>
+  .card.server-info {
+  border: 2px solid #ff2d2d; /* اللون الأحمر */
+  box-shadow: 0 0 15px rgba(255,45,45,0.6); /* الـ glow */
+  border-radius: 12px;
+  padding: 18px;
+  transition: all 0.3s ease;
+}
+
+/* hover effect إضافي */
+.card.server-info:hover {
+  box-shadow: 0 0 25px rgba(255,45,45,0.8), 0 0 40px rgba(255,45,45,0.4) inset;
+  transform: scale(1.02);
+}
+ 
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;font-family:Inter, 'Segoe UI', Roboto, Arial; background:radial-gradient(1200px 400px at 10% 30%, rgba(255,40,40,0.06), transparent), radial-gradient(800px 300px at 95% 70%, rgba(255,10,10,0.05), transparent), linear-gradient(180deg,#030303 0%, #0a0a0a 100%); color:#fff;}
+ 
+    :root{
+      --bg:#060606;
+      --dark:#0b0b0b;
+      --red-1:#b91c1c;
+      --red-2:#ff2d2d;
+      --muted:#c6c6c6;
+      --card:rgba(255,255,255,0.03);
+      --glass:rgba(255,255,255,0.03);
+      --accent:var(--red-1);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;font-family:Inter, 'Segoe UI', Roboto, Arial; background:radial-gradient(1200px 400px at 10% 30%, rgba(255,40,40,0.06), transparent), radial-gradient(800px 300px at 95% 70%, rgba(255,10,10,0.05), transparent), linear-gradient(180deg,#030303 0%, #0a0a0a 100%); color:#fff;}
+
+
+.discord-center {
+  display: flex;
+  justify-content: center; /* وسط أفقياً */
+  align-items: center;    /* وسط عمودياً */
+  height: 100vh;          /* يملأ كامل ارتفاع الشاشة */
+}
+  
+    .nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 36px;
+  z-index: 50;
+  background: linear-gradient(180deg, rgba(0,0,0,0.35), rgba(0,0,0,0.15));
+  backdrop-filter: blur(4px);
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  
+  /* الترانزيشن */
+  transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+    .brand{display:flex;align-items:center;gap:14px}
+    .logo{width:44px;height:44px;border-radius:8px;display:flex;align-items:center;justify-content:center;overflow:hidden;transition:opacity 0.5s;}
+    .nav-links{display:flex;gap:26px;align-items:center}
+    .nav-links a{color:var(--muted);text-decoration:none;font-weight:600;font-size:15px}
+    .minecraft-logo {
+  width: 30%;
+  margin-left: 230px;   /* خليه أصغر داخل المربع */
+  height: 80%;
+  border-radius:8px;    /* إذا بدك الزوايا مستديرة */
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+
+.minecraft-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit:contain;   /* يخلي الصورة تظهر كاملة بدون قص */
+}
+
+    .lang-toggle{display:flex;gap:8px;align-items:center}
+    .lang-btn{
+      width:38px;
+      height:38px;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(255,255,255,0.06);
+      cursor:pointer;
+      font-weight:700;
+      font-size:14px;
+      line-height:1;
+      text-align:center;
+      transition: transform 0.3s ease, color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+      position:relative;
+    }
+    .btn-primary{
+  background: linear-gradient(90deg,var(--red-1),var(--red-2));
+  color: #D40000;
+  border:0;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease, color 0.3s ease, box-shadow 0.4s ease;
+}
+    .lang-btn:hover{
+      transform:translateY(-3px) scale(1.05);
+      box-shadow:0 0 10px rgba(255,45,45,0.6);
+      color:#D40000;
+    }
+
+    /* Hero */
+    .hero{min-height:520px;display:flex;align-items:center;justify-content:center;padding:110px 24px 60px;position:relative;overflow:hidden}
+    .hero::before{content:'';position:absolute;inset:0;background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="600"><g opacity="0.06"><path fill="%23ff2d2d" d="M50 450c80-140 300-200 520-160s380 120 540 80v140H50z"/></g></svg>');background-repeat:repeat;mix-blend-mode:screen}
+    .hero-inner{width:100%;max-width:1100px;display:grid;grid-template-columns:1fr 420px;gap:36px;align-items:center}
+
+    .hero-left h1{font-size:56px;margin:0 0 12px;line-height:1.02;color:var(--red-2);text-shadow:0 10px 30px rgba(180,20,20,0.15)}
+    .hero-left p{margin:0 0 22px;color:var(--muted);font-size:18px}
+    .actions{display:flex;gap:14px}
+    .btn{padding:12px 22px;border-radius:999px;font-weight:700;border:1px solid rgba(255,255,255,0.06);cursor:pointer;background:transparent;color:#fff;transition:transform 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;}
+    .btn-primary {
+  background: linear-gradient(90deg, var(--red-1), var(--red-2));
+  color: #120202 !important; /* نص أسود ثابت */
+  border: 0;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* شيلنا تغير اللون من transition */
+}
+.btn-explore {
+  background: #403e3e; /* اللون الأخضر */
+  color: #fafafa !important; /* لون النص */
+  border: 1px solid #dc0000;
+}
+
+	
+
+    .btn:hover {
+  transform: translateY(-4px) scale(1.03);
+  color: #ff2d2d;
+  box-shadow: 0 0 17px rgba(255, 11, 11, 0.4);
+  filter: brightness(1.4) saturate(1.5);
+}
+
+    .btn-explore:hover {
+  transform: translateY(-4px) scale(1.03);
+  background: #646464;
+  box-shadow: 0 0 12px rgba(146, 146, 146, 0.5); /* شوية ظل أخضر */
+  color: #ffffff !important; /* نص ثابت */
+}
+
+
+    .card{background:linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.25));padding:18px;border-radius:12px;border:1px solid rgba(255,255,255,0.03)}
+    .server-info{display:flex;flex-direction:column;gap:10px}
+    
+    .card.server-card:hover {
+  border: 2px solid #ff2d2d;
+  box-shadow: 0 0 25px rgba(255, 0, 0, 0.7), 0 0 40px rgba(255, 0, 0, 0.4) inset;
+  transform: scale(1.02);
+  transition: all 0.3s ease;
+}
+
+    .tag{padding:8px 12px;border-radius:999px;background:rgba(255,255,255,0.03);color:var(--muted);font-weight:700}
+
+    /* Why section */
+    .section{padding:48px 24px}
+    .center{max-width:1100px;margin:0 auto}
+    .why-title{font-size:36px;text-align:center;margin:30px 0;color:#fff}
+
+    /* responsive */
+    @media (max-width:980px){
+      .nav{padding:0 18px}
+      .hero-inner{grid-template-columns:1fr}
+      .hero-left h1{font-size:36px}
+    }
+    @media (max-width:520px){
+      .nav-links{display:none}
+      .hero{padding-top:100px}
+      .hero-inner{gap:20px}
+    }
+
+    /* subtle floating petals */
+    .petal{position:absolute;opacity:0.06;filter:blur(2px);transform:translateZ(0)}
+    .petal.p1{width:300px;right:-60px;top:60px}
+    .petal.p2{width:260px;left:-80px;bottom:40px}
+    @keyframes floaty{0%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-18px) rotate(4deg)}100%{transform:translateY(0) rotate(0deg)}}
+    .petal{animation:floaty 6s ease-in-out infinite}
+/* Discord */
+footer a[href*="discord"]:hover img {
+  filter: drop-shadow(0 0 10px rgba(114, 137, 218, 1)) brightness(1.4);
+  transform: scale(1.1);
+}
+
+/* YouTube */
+footer a[href*="youtube"]:hover img {
+  filter: drop-shadow(0 0 10px rgba(255, 0, 0, 1)) brightness(1.4);
+  transform: scale(1.1);
+}
+
+/* Instagram */
+footer a[href*="instagram"]:hover img {
+  filter: drop-shadow(0 0 10px rgba(255, 90, 190, 1)) brightness(1.4);
+  transform: scale(1.1);
+}
+
+/* عام للانتقال السلس */
+footer a img {
+  transition: all 0.3s ease;
+}
+
+    /* hover for nav, lang buttons, and footer links */
+    .nav-links a, footer ul li{
+      transition: transform 0.3s ease, color 0.3s ease;
+      display:inline-block;
+      cursor:pointer;
+    }
+    .nav-links a:hover, footer ul li:hover{
+      transform: translateY(-4px) scale(1.03);
+      color:#ff2d2d;
+    }
+    .card {
+  background: linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.25));
+  padding: 18px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.03);
+  transition: border 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  border: 2px solid #ff2d2d; /* الإطار الأحمر */
+  box-shadow: 0 0 20px rgba(255, 45, 45, 0.4); /* الـ glow */
+  transform: scale(1.02); /* تكبير خفيف */
+}
+
+  </style>
+</head>
+<body>
+
+  
+
+
+<div class="register-wrapper">
+  <div class="register-card">
+    <img src="https://i.ibb.co/S4fMZm0r/devil11.png" class="register-logo">
+
+    <h2>Login</h2>
+
+    <div id="login-message"
+      style="color:red;font-weight:bold;margin-bottom:10px;display:none;">
+    </div>
+
+    <input id="email" type="email" placeholder="Email">
+    <input id="password" type="password" placeholder="Password">
+
+    <button class="register-btn" onclick="login()">Login</button>
+
+<p class="login-text">
+  Don’t have an account?
+  <span onclick="goToRegister()">Register</span>
+</p>
+
+  </div>
+</div>
+
+
+
+</div>
+  
+
+
+<div class="discord-center">
+  <iframe src="https://discord.com/widget?id=1396493307194114118&theme=dark"
+    width="350" height="500"></iframe>
+</div>
+
+  
+  
+
+
+
+
+
+  <div class="nav" id="navbar">
+  <div class="brand">
+    <div class="logo">
+      <img src="https://i.ibb.co/S4fMZm0r/devil11.png" alt="DevilCraft Logo" style="width:200%;height:100%;border-radius:8px;object-fit:cover;">
+    </div>
+    <div style="display:flex;flex-direction:column">
+      <div style="font-weight:800">DevilCraft</div>
+      <div style="font-size:12px;color:var(--muted)">Other Members</div>
+    </div>
+  </div>
+
+  <div class="minecraft-logo">
+    <img src="https://i.imgur.com/akNHcaO.png" alt="Minecraft Logo" style="width:100%; height:100%; object-fit:contain; border-radius:8px;">
+  </div>
+
+  <div style="display:flex;align-items:center;gap:18px">
+
+    <!-- الروابط -->
+    <div class="nav-links">
+      <a href="https://osamagamer50.github.io/gg/" target="_blank" data-i18n="otherMembers">Other Members</a> 
+      <a href="#join" data-i18n="joinUs">Join Us</a>
+      <a href="#explore" data-i18n="explore">Explore</a>
+      <a href="#contact" data-i18n="contact">Contact Us</a>
+    </div>
+
+    <!-- فوتر المستخدم جنب Contact Us -->
+
+
+
+
+
+<div id="navbar-user" style="display:flex;align-items:center;gap:10px;color:white;">
+      <img id="navbar-user-photo" src="" alt="User Photo" style="width:40px;height:40px;border-radius:50%;display:none;">
+      <span id="navbar-user-name" style="display:none;font-weight:600;"></span>
+      <button id="logout-btn" class="logout-btn" style="margin-left:10px;display:none;">Logout</button>
+    </div>
+    <!-- أزرار اللغة -->
+    <div class="lang-toggle" aria-hidden="false">
+      <div id="btn-ar" class="lang-btn" title="Arabic">AR</div>
+      <div id="btn-en" class="lang-btn active" title="English">EN</div>
+    </div>
+
+  </div>
+</div>
+
+   
+  
+
+
+  <!-- ====== DevilCraft Footer Section ====== -->
+  <footer style="background:#0a0a0a;color:white;padding:60px 10%;font-family:'Poppins',sans-serif;">
+    <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:40px;">
+
+      <!-- About -->
+      <div style="flex:1;min-width:220px;">
+        <h2 style="color:#e22;letter-spacing:1px;">DevilCraft</h2>
+        <p style="color:#ccc;margin:15px 0 25px;">
+          Join our team and be part of a creative community of Minecraft players and content creators around the world.
+        </p>
+        <div style="display:flex;gap:10px;">
+          <a href="https://discord.gg/mpnAQxzb" target="_blank" style="background:#1c1c1c;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;">
+            <img src="https://cdn-icons-png.flaticon.com/512/3670/3670157.png" alt="Discord" style="width:22px;height:22px;">
+          </a>
+          <a href="https://www.youtube.com/@Osama_gamer60" target="_blank" style="background:#1c1c1c;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;">
+            <img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" alt="YouTube" style="width:22px;height:22px;">
+          </a>
+          <a href="https://www.instagram.com/osamagamer60/"_blank" style="background:#1c1c1c;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;">
+            <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram" style="width:22px;height:22px;">
+          </a>
+        </div>
+      </div>
+
+      <!-- Quick Links -->
+      <div style="flex:1;min-width:180px;">
+        <h3 style="border-bottom:2px solid #e22;display:inline-block;padding-bottom:5px;">Quick Links</h3>
+        <ul style="list-style:none;padding:0;margin-top:20px;line-height:2;">
+          <li>← Team</li>
+          <li>← Join Us</li>
+          <li>← Explore</li>
+        </ul>
+      </div>
+
+      <!-- Founders -->
+      <div style="flex:1;min-width:180px;">
+        <h3 style="border-bottom:2px solid #e22;display:inline-block;padding-bottom:5px;">Our Heroes</h3>
+        <ul style="list-style:none;padding:0;margin-top:20px;line-height:2;">
+          <li>← Osamagamer60 - Server Owner</li>
+          <li>← Mr_Zero - Server Admin</li>
+          <li>← Siamo - Discord Manager</li>
+        </ul>
+      </div>
+
+      <!-- Contact -->
+      <div style="flex:1;min-width:200px;">
+        <h3 style="border-bottom:2px solid #e22;display:inline-block;padding-bottom:5px;">Contact Us</h3>
+        <ul style="list-style:none;padding:0;margin-top:20px;line-height:2;">
+          <li> Subscribe to our Channel</li>
+          <li> Follow us on Instagram</li>
+          <li> Join our Discord Server</li>
+        </ul>
+      </div>
+    </div>
+
+    <hr style="border:none;border-top:1px solid #222;margin:40px 0;">
+    <p style="text-align:center;color:#777;">© 2025 DevilCraft. All Rights Reserved | Designed by Osamagamer60</p>
+  </footer>
+
+  <script>
+    // fade entire navbar on scroll
+    const navbar = document.getElementById('navbar');
+    let lastScroll = 0;
+    window.addEventListener('scroll', ()=>{
+  const current = window.scrollY;
+  if(current > lastScroll && current > 100){
+    navbar.style.transform = 'translateY(-100%)'; // يخفيه للأعلى
+  } else {
+    navbar.style.transform = 'translateY(0)'; // يرجعه للوضع الطبيعي
+  }
+  lastScroll = current;
+});
+
+ 
+
+    // translations
+    const i18n = {
+      en: {
+        otherMembers: 'Other Members',
+        joinUs: 'Join Us',
+        explore: 'Explore',
+        contact: 'Contact Us',
+        title: 'Join the DevilCraft Team',
+        subtitle: "We are looking for exceptional talents in content creation. Whether you're a YouTuber or streamer, there's a place for you!",
+        apply: 'Apply Now',
+        exploreHere: 'Explore Here',
+        whyTitle: 'Why DevilCraft?',
+        feat1: 'Creative Support',
+        feat1desc: 'Help with production, thumbnails, and collaboration.',
+        feat2: 'Community',
+        feat2desc: 'Active audience and friendly team to grow with.',
+        feat3: 'Opportunities',
+        feat3desc: 'Sponsorships and featured content chances.',
+        socials: 'Discord · instagram · YouTube'
+      },
+      ar: {
+        otherMembers: 'أعضاء آخرون',
+        joinUs: 'انضم إلينا',
+        explore: 'استكشف',
+        exploreHere: 'استكشف هنا',
+        contact: 'تواصل معنا',
+        title: 'انضم إلى فريق DevilCraft',
+        subtitle: 'نبحث عن مواهب مميزة في صناعة المحتوى. سواء كنت يوتيوبر أو ستريمر، هنالك مكان لك!',
+        apply: 'قدّم الآن',
+        explMoreore: 'المزيد',
+        whyTitle: 'لماذا DevilCraft؟',
+        feat1: 'دعم إبداعي',
+        feat1desc: 'مساعدة في الإنتاج والصور المصغرة والتعاون.',
+        feat2: 'المجتمع',
+        feat2desc: 'جمهور نشط وفريق ودود للنمو معه.',
+        feat3: 'فرص',
+        feat3desc: 'رعاية وفرص لعرض المحتوى.',
+        socials: 'ديسكورد · تويتر · يوتيوب'
+      }
+    };
+
+    function setLanguage(lang){
+      const map = i18n[lang] || i18n.en;
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if(map[key]) el.innerText = map[key];
+      });
+      document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+      document.documentElement.setAttribute('lang', lang);
+      document.getElementById('btn-en').classList.toggle('active', lang==='en');
+      document.getElementById('btn-ar').classList.toggle('active', lang==='ar');
+      
+      localStorage.setItem('devilcraft_lang', lang);
+    }
+
+    document.getElementById('btn-en').onclick=()=>setLanguage('en');
+    document.getElementById('btn-ar').onclick=()=>setLanguage('ar');
+    setLanguage(localStorage.getItem('devilcraft_lang')||'en');
+    function setLanguage(lang){
+  const map = i18n[lang] || i18n.en;
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if(map[key]) el.innerText = map[key];
+  });
+  document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+  document.documentElement.setAttribute('lang', lang);
+  document.getElementById('btn-en').classList.toggle('active', lang==='en');
+  document.getElementById('btn-ar').classList.toggle('active', lang==='ar');
+  
+  // 🔹 تعديل موضع لوجو ماينكرافت حسب اللغة
+  const mcLogo = document.querySelector('.minecraft-logo');
+  if(lang === 'ar'){
+    mcLogo.style.marginLeft = '-340px';   // ← أقرب لليسار
+    mcLogo.style.transition = 'margin 0.4s ease';
+  } else {
+    mcLogo.style.marginLeft = '230px';  // ← الوضع الافتراضي بالإنجليزية
+  }
+
+  localStorage.setItem('devilcraft_lang', lang);
+}
+
+  </script>
+  <div id="footer-user" style="display:flex;align-items:center;gap:10px;margin-top:10px;color:white;">
+  <img id="footer-user-photo" src="" alt="User Photo" style="width:40px;height:40px;border-radius:50%;display:none;">
+  <span id="footer-user-name" style="display:none;"></span>
+</div>
+
+
+
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import {
+    getAuth,
+    onAuthStateChanged,
+    signInWithEmailAndPassword,
+    signOut
+  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyA3UScTAsMLju0IyJXAZaVrdedpMHx7loY",
+    authDomain: "devilbox-4613c.firebaseapp.com",
+    projectId: "devilbox-4613c",
+    storageBucket: "devilbox-4613c.appspot.com",
+    messagingSenderId: "369333804017",
+    appId: "1:369333804017:web:dec93caeb0347c58400250"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  const logoutBtn = document.getElementById("logout-btn");
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      logoutBtn.style.display = "inline-block";
+    } else {
+      logoutBtn.style.display = "none";
+    }
+  });
+
+  window.login = async function () {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    const msg = document.getElementById("login-message");
+
+    msg.style.display = "none";
+
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      msg.style.color = "green";
+      msg.style.display = "block";
+      msg.textContent = "Logged in successfully ✅";
+    } catch (err) {
+      msg.style.color = "red";
+      msg.style.display = "block";
+
+      if (err.code === "auth/user-not-found") {
+        msg.textContent = "Account not found ❌";
+      } else if (err.code === "auth/wrong-password") {
+        msg.textContent = "Wrong password ❌";
+      } else {
+        msg.textContent = err.message;
+      }
+    }
+  };
+
+  logoutBtn.onclick = async () => {
+    await signOut(auth);
+  };
+</script>
+
+<div id="user-info" style="position:fixed;top:20px;right:20px;color:white;display:none;align-items:center;gap:10px;">
+  <span id="user-name"></span>
+  <button id="logout-btn" class="logout-btn">Logout</button>
+
+</div>
+<script>
+  function goToRegister() {
+    window.location.href = "https://osamagamer50.github.io/gg/";
+  }
+</script>
+
+
+</body>
+</html>
